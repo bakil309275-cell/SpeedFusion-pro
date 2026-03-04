@@ -1,24 +1,34 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Zap, Wifi, Cpu, Battery, Gauge, Globe, Shield, Wind } from 'lucide-react'
+import { Zap, Wifi, Cpu, Battery, Gauge, Globe, Shield, Activity, TrendingUp, Clock } from 'lucide-react'
+import { useSpeedHistory } from '@/lib/hooks/useSpeedHistory'
+import { runSpeedTest } from '@/lib/utils/speedTest'
+import Link from 'next/link'
 
 export default function Home() {
   const [downloadSpeed, setDownloadSpeed] = useState<number | null>(null)
   const [ping, setPing] = useState<number | null>(null)
   const [isBoosting, setIsBoosting] = useState(false)
   const [isBlackMode, setIsBlackMode] = useState(false)
+  const { history, addResult } = useSpeedHistory()
+  
   const [stats, setStats] = useState({
-    devices: 0,
-    networks: 0,
-    saved: '0MB'
+    devices: Math.floor(Math.random() * 5) + 1,
+    networks: Math.floor(Math.random() * 3) + 1,
+    saved: '156MB'
   })
 
   const handleSpeedTest = useCallback(async () => {
-    // محاكاة اختبار السرعة
-    setDownloadSpeed(Math.floor(Math.random() * 100) + 20)
-    setPing(Math.floor(Math.random() * 30) + 10)
-  }, [])
+    try {
+      const result = await runSpeedTest()
+      setDownloadSpeed(result.download)
+      setPing(result.ping)
+      addResult(result)
+    } catch (error) {
+      console.error('Speed test failed:', error)
+    }
+  }, [addResult])
 
   const handleFullBoost = useCallback(async () => {
     setIsBoosting(true)
@@ -48,12 +58,15 @@ export default function Home() {
     handleSpeedTest()
   }, [handleSpeedTest])
 
+  // آخر 3 نتائج
+  const recentResults = history.slice(0, 3)
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
       <div className="text-center mb-12">
         <h1 className="text-5xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-pulse-slow">
-          Nexus Boost
+          SpeedFusion Pro
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
           أحدث تكنولوجيا لتحسين أداء جهازك وشبكتك بأقصى كفاءة
@@ -68,6 +81,9 @@ export default function Home() {
               <Gauge className="w-6 h-6 text-purple-400" />
               <h2 className="text-xl font-semibold text-white">سرعة الإنترنت</h2>
             </div>
+            <Link href="/stats" className="text-sm text-purple-400 hover:text-purple-300">
+              عرض الكل →
+            </Link>
           </div>
           
           <div className="grid grid-cols-2 gap-4 text-center mb-4">
@@ -103,21 +119,46 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Recent Results */}
+      {recentResults.length > 0 && (
+        <div className="max-w-md mx-auto mb-8">
+          <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-6 border border-white/10">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-purple-400" />
+              آخر النتائج
+            </h3>
+            <div className="space-y-3">
+              {recentResults.map((result, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-gray-900/50 rounded-lg">
+                  <span className="text-sm text-gray-400">
+                    {new Date(result.timestamp).toLocaleTimeString('ar-EG')}
+                  </span>
+                  <div className="flex gap-3">
+                    <span className="text-blue-400 text-sm">{result.download} Mbps</span>
+                    <span className="text-green-400 text-sm">{result.ping} ms</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
-        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center">
+        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center hover:border-purple-500/50 transition-all">
           <Cpu className="w-8 h-8 text-purple-400 mx-auto mb-2" />
           <h3 className="text-sm text-gray-400">الأجهزة المحسنة</h3>
           <p className="text-2xl font-bold text-white">{stats.devices}</p>
         </div>
         
-        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center">
+        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center hover:border-purple-500/50 transition-all">
           <Wifi className="w-8 h-8 text-green-400 mx-auto mb-2" />
           <h3 className="text-sm text-gray-400">الشبكات المتاحة</h3>
           <p className="text-2xl font-bold text-white">{stats.networks}</p>
         </div>
         
-        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center">
+        <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 text-center hover:border-purple-500/50 transition-all">
           <Battery className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
           <h3 className="text-sm text-gray-400">تم توفير</h3>
           <p className="text-2xl font-bold text-white">{stats.saved}</p>
@@ -127,17 +168,31 @@ export default function Home() {
       {/* Features Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
         {[
-          { icon: <Zap className="w-6 h-6" />, title: 'سرعة فائقة', desc: 'تحسين فوري', color: 'text-yellow-400' },
-          { icon: <Shield className="w-6 h-6" />, title: 'آمن تماماً', desc: 'حماية خصوصيتك', color: 'text-green-400' },
-          { icon: <Battery className="w-6 h-6" />, title: 'توفير بطارية', desc: 'حتى 40% أكثر', color: 'text-blue-400' },
-          { icon: <Globe className="w-6 h-6" />, title: 'DNS ذكي', desc: 'أسرع سيرفر', color: 'text-purple-400' }
+          { icon: <Zap className="w-6 h-6" />, title: 'سرعة فائقة', desc: 'تحسين فوري', color: 'text-yellow-400', href: '/boost' },
+          { icon: <Shield className="w-6 h-6" />, title: 'آمن تماماً', desc: 'حماية خصوصيتك', color: 'text-green-400', href: '/settings' },
+          { icon: <Battery className="w-6 h-6" />, title: 'توفير بطارية', desc: 'حتى 40% أكثر', color: 'text-blue-400', href: '/settings' },
+          { icon: <Globe className="w-6 h-6" />, title: 'DNS ذكي', desc: 'أسرع سيرفر', color: 'text-purple-400', href: '/boost' }
         ].map((feature, index) => (
-          <div key={index} className="bg-white/5 backdrop-blur-lg rounded-xl p-4 text-center border border-white/10 hover:border-purple-500/50 transition-all">
-            <div className={`${feature.color} mb-2 flex justify-center`}>{feature.icon}</div>
-            <h4 className="text-white font-semibold text-sm">{feature.title}</h4>
-            <p className="text-gray-400 text-xs">{feature.desc}</p>
-          </div>
+          <Link href={feature.href} key={index}>
+            <div className="bg-white/5 backdrop-blur-lg rounded-xl p-4 text-center border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer">
+              <div className={`${feature.color} mb-2 flex justify-center`}>{feature.icon}</div>
+              <h4 className="text-white font-semibold text-sm">{feature.title}</h4>
+              <p className="text-gray-400 text-xs">{feature.desc}</p>
+            </div>
+          </Link>
         ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="flex justify-center gap-4 mt-8">
+        <Link href="/stats" className="px-6 py-3 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-xl transition flex items-center gap-2">
+          <Activity className="w-5 h-5" />
+          الإحصائيات
+        </Link>
+        <Link href="/boost" className="px-6 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-xl transition flex items-center gap-2">
+          <Zap className="w-5 h-5" />
+          تحسين متقدم
+        </Link>
       </div>
 
       {/* Blackout Mode Toggle */}
