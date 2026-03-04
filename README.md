@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 SpeedFusion Pro - مسرع النظام والإنترنت
 
-## Getting Started
+<div dir="rtl">
 
-First, run the development server:
+## ✨ نظرة عامة
+تطبيق متطور لتحسين سرعة النظام والإنترنت مع توفير البطارية، يعمل في أقصى الظروف وأسوأها. تم بناء التطبيق باستخدام أحدث التقنيات لضمان أفضل أداء.
 
-```bash
+## 📱 المميزات الرئيسية
+
+### ⚡ تحسين السرعة
+- تسريع تحميل الصفحات والملفات
+- تحسين أداء النظام بشكل ذكي
+- تنظيف ذاكرة التخزين المؤقت
+
+### 🌐 تحسين الشبكة
+- تبديل DNS لأسرع سيرفر
+- تحليل شبكات Wi-Fi المحيطة
+- اقتراح أفضل القنوات
+
+### 🔋 توفير البطارية
+- وضع توفير الطاقة الذكي
+- تقليل استهلاك الموارد
+- إطالة عمر البطارية
+
+### 🌙 وضع الطوارئ
+- واجهة أحادية اللون (أبيض/أسود)
+- تعطيل المؤثرات البصرية
+- أقصى توفير للطاقة
+
+## 🛠️ التقنيات المستخدمة
+- **Next.js 14** - إطار العمل الرئيسي
+- **TypeScript** - لكتابة كود آمن
+- **Tailwind CSS** - للتصميم والتنسيق
+- **PWA** - كتطبيق ويب تقدمي
+- **Web Workers** - للمهام الثقيلة في الخلفية
+
+## 📦 التثبيت والتشغيل
+
+\`\`\`bash
+# تثبيت الحزم
+npm install
+
+# تشغيل التطوير
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# بناء للإنتاج
+npm run build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# تشغيل الإنتاج
+npm start
+\`\`\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 النشر على Google Play
+يمكن تحويل التطبيق إلى APK باستخدام:
+- **Capacitor** من Ionic
+- **Trusted Web Activity** من Google
 
-## Learn More
+## 📸 لقطات الشاشة
+[سيتم إضافة لقطات الشاشة قريباً]
 
-To learn more about Next.js, take a look at the following resources:
+## 🤝 المساهمة
+نرحب بمساهماتكم! يرجى:
+1. عمل Fork للمشروع
+2. إنشاء فرع للتطوير
+3. إرسال Pull Request
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 الترخيص
+MIT License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 👥 المطورون
+- @bakil309275-cell
 
-## Deploy on Vercel
+## 📞 التواصل
+للاستفسارات والاقتراحات، يرجى فتح Issue في المستودع.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+</div>
