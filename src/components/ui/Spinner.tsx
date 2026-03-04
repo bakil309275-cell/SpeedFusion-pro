@@ -1,0 +1,22 @@
+interface SpinnerProps {
+  size?: 'small' | 'medium' | 'large'
+  color?: string
+}
+
+export default function Spinner({ size = 'medium', color = 'text-purple-600' }: SpinnerProps) {
+  const sizeClasses = {
+    small: 'w-4 h-4',
+    medium: 'w-8 h-8',
+    large: 'w-12 h-12'
+  }
+  
+  return (
+    <div className="flex justify-center items-center">
+      <div
+        className={`${sizeClasses[size]} ${color} animate-spin rounded-full border-4 border-t-transparent border-current`}
+        role="status"
+        aria-label="loading"
+      />
+    </div>
+  )
+}
