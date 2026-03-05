@@ -1,12 +1,13 @@
 {
   "background_color": "#0a0a0a",
   "description": "تطبيق متطور لتحسين سرعة النظام والإنترنت مع توفير البطارية - Next.js TypeScript PWA",
-  "dir": "ltr",
+  "dir": "rtl",
   "display": "standalone",
   "name": "SpeedFusion Pro",
   "orientation": "any",
   "scope": "/",
   "short_name": "SpeedFusion",
-  "start_url": "/",
-  "theme_color": "#0a0a0a"
+  "start_url": "//",
+  "theme_color": "#121212",
+  "lang": "ar"
 }
