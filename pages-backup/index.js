@@ -1,0 +1,17 @@
+
+import React from "react";
+
+export default function Home() {
+  return (
+    <div style={{ backgroundColor: "#001f3f", color: "white", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", fontFamily: "sans-serif" }}>
+      <h1 style={{ color: "#0070f3" }}>SpeedFusion Pro</h1>
+      <p>Ã«—Ì  ÂÌ∆… „‰’… ﬁÌ«” «·”—⁄…...</p>
+      <div style={{ border: "2px solid #0070f3", padding: "20px", borderRadius: "10px" }}>
+        <p>«·Õ«·…: „ ’· ⁄»— Toshiba</p>
+        <button style={{ backgroundColor: "#0070f3", color: "white", border: "none", padding: "10px 20px", borderRadius: "5px", cursor: "pointer" }}>
+          «»œ√ ›Õ’ «·”—⁄…
+        </button>
+      </div>
+    </div>
+  );
+}
