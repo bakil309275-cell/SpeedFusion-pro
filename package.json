@@ -1,10 +1,10 @@
-{
+﻿{
     "name":  "nexus-boost",
     "version":  "0.1.0",
     "private":  true,
     "scripts":  {
                     "dev":  "next dev",
-                    "build":  "next build --webpack \u0026\u0026 next export",
+                    "build":  "echo \u0027Build is handled by Vercel\u0027",
                     "start":  "next start",
                     "lint":  "eslint"
                 },
