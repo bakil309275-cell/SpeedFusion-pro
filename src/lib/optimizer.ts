@@ -1,12 +1,1 @@
-﻿export const optimizeSystem = async (onProgress: (p: number) => void) => {
-  if (Notification.permission === 'default') await Notification.requestPermission();
-  for (let i = 0; i <= 100; i += 5) {
-    onProgress(i);
-    await new Promise(res => setTimeout(res, 100));
-  }
-  const results = { freedSpace: (Math.random() * 800 + 200).toFixed(0) + ' MB', speedBoost: '32%' };
-  if (Notification.permission === 'granted') {
-    new Notification('SpeedFusion Pro', { body: 'تمت عملية التحسين بنجاح! تم توفير ' + results.freedSpace, icon: '/icon-192x192.png' });
-  }
-  return results;
-};
+﻿export const getSystemStats = () => { const ram = Math.floor(Math.random() * 45 + 40); return { ram: ram + '%', cpu: Math.floor(Math.random() * 30 + 35) + '°C', status: ram > 80 ? 'إجهاد' : 'مستقر' }; }; export const optimizeSystem = async (onProgress) => { for (let i = 0; i <= 100; i += 10) { onProgress(i); await new Promise(r => setTimeout(r, 150)); } return { freedSpace: '1.2 GB', speedBoost: '25%', tasksOptimized: 14 }; };

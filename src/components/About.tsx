@@ -1,0 +1,1 @@
+﻿export default function About() { return ( <div className='glass mt-12 p-8 rounded-[40px] text-center border-white/5'> <h3 className='text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent'> المطور: bakil309275-cell </h3> <p className='text-slate-400 mt-2 text-sm'>تطوير وبناء أنظمة الأداء العالي</p> </div> ); }
