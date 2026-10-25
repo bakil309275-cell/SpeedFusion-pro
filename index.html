@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https:; manifest-src 'self'; base-uri 'self'; form-action 'none'">
+  <meta name="description" content="SpeedFusion Pro: اختبار حقيقي لسرعة الإنترنت (تحميل، رفع، زمن استجابة) ومقارنة سرعة خوادم DNS وفحص الاتصال وحالة البطارية.">
+  <meta name="theme-color" content="#0f0c29">
+  <title>SpeedFusion Pro - اختبار سرعة الإنترنت وDNS</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-96x96.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div id="offlineBar" class="offline-bar" hidden>أنت غير متصل بالإنترنت — القياسات تحتاج اتصالاً</div>
+
+  <header class="top">
+    <h1><span aria-hidden="true">⚡</span> SpeedFusion Pro</h1>
+    <button id="installBtn" class="chip" hidden>تثبيت التطبيق</button>
+  </header>
+
+  <main>
+    <!-- ================= اختبار السرعة ================= -->
+    <section id="view-test" class="view" aria-labelledby="t-test">
+      <h2 id="t-test" class="sr">اختبار السرعة</h2>
+      <div class="card gauge-card">
+        <div class="gauge" role="img" aria-label="عداد السرعة">
+          <svg viewBox="0 0 220 130" aria-hidden="true">
+            <defs>
+              <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#667eea"/><stop offset="1" stop-color="#b06ab3"/>
+              </linearGradient>
+            </defs>
+            <path class="g-track" d="M 20 110 A 90 90 0 0 1 200 110"/>
+            <path id="gArc" class="g-arc" d="M 20 110 A 90 90 0 0 1 200 110"/>
+          </svg>
+          <div class="g-center">
+            <div id="gValue" class="g-value" aria-live="off">0</div>
+            <div class="g-unit">Mbps</div>
+          </div>
+        </div>
+        <div id="phase" class="phase" role="status" aria-live="polite">جاهز للاختبار</div>
+        <div class="tiles">
+          <div class="tile"><span class="tl">تحميل</span><b id="mDown">—</b><small>Mbps</small></div>
+          <div class="tile"><span class="tl">رفع</span><b id="mUp">—</b><small>Mbps</small></div>
+          <div class="tile"><span class="tl">استجابة</span><b id="mPing">—</b><small>ms</small></div>
+          <div class="tile"><span class="tl">تذبذب</span><b id="mJit">—</b><small>ms</small></div>
+        </div>
+        <button id="startBtn" class="btn">▶ ابدأ اختبار السرعة</button>
+        <p id="serverLine" class="muted center small"></p>
+      </div>
+
+      <div id="verdict" class="card" hidden>
+        <h3>ماذا تعني هذه النتيجة؟</h3>
+        <ul id="verdictList" class="verdict"></ul>
+        <button id="shareBtn" class="btn btn-outline" hidden>مشاركة النتيجة</button>
+      </div>
+
+      <div class="card">
+        <div class="row-between"><h3>آخر النتائج</h3><a href="#history" class="link">عرض الكل ←</a></div>
+        <div id="recent" class="muted small">لا توجد نتائج بعد</div>
+      </div>
+      <p class="note">القياس يتم فعلياً عبر شبكة Cloudflare. الاختبار الكامل يستهلك عادةً ما بين 20 و150 ميغابايت حسب سرعتك؛ فعّل «توفير البيانات» من الإعدادات لتقليله.</p>
+    </section>
+
+    <!-- ================= DNS ================= -->
+    <section id="view-dns" class="view" hidden aria-labelledby="t-dns">
+      <h2 id="t-dns">🌐 مقارنة خوادم DNS</h2>
+      <div class="card">
+        <p class="muted small">يقيس التطبيق زمن الاستجابة الفعلي لكل خادم عبر DNS-over-HTTPS من شبكتك الحالية، ثم يرتبها من الأسرع.</p>
+        <button id="dnsBtn" class="btn">قياس الخوادم الآن</button>
+        <ul id="dnsList" class="dns-list"></ul>
+      </div>
+      <div id="dnsHow" class="card" hidden>
+        <h3>كيف تفعّل الخادم الأسرع؟</h3>
+        <p class="small">المتصفحات لا تسمح لأي تطبيق ويب بتغيير DNS الجهاز، لذلك يجب ضبطه بنفسك (دقيقة واحدة):</p>
+        <p class="small"><b>أندرويد 9+:</b> الإعدادات ← الشبكة والإنترنت ← DNS خاص ← «اسم مضيف موفّر DNS الخاص» والصق:</p>
+        <div class="copy-row"><code id="dnsHost">—</code><button id="copyHost" class="chip">نسخ</button></div>
+        <p class="small"><b>آيفون / ويندوز / الراوتر:</b> أدخل عنوانَي IP التاليين في إعدادات DNS لشبكتك:</p>
+        <div class="copy-row"><code id="dnsIps">—</code><button id="copyIps" class="chip">نسخ</button></div>
+        <p class="small muted">بعد التفعيل أعد قياس الخوادم أو اختبار السرعة لتتأكد من الفرق.</p>
+      </div>
+    </section>
+
+    <!-- ================= الاتصال والبطارية ================= -->
+    <section id="view-net" class="view" hidden aria-labelledby="t-net">
+      <h2 id="t-net">📡 الاتصال والجهاز</h2>
+      <div class="card">
+        <div class="row-between"><h3>فحص الاتصال</h3><button id="checkBtn" class="chip">فحص</button></div>
+        <ul id="checkList" class="kv"></ul>
+      </div>
+      <div class="card">
+        <h3>الشبكة (من المتصفح)</h3>
+        <ul id="netList" class="kv"></ul>
+      </div>
+      <div class="card">
+        <h3>البطارية</h3>
+        <div id="batBox" class="muted small">جارٍ القراءة…</div>
+      </div>
+    </section>
+
+    <!-- ================= السجل ================= -->
+    <section id="view-history" class="view" hidden aria-labelledby="t-hist">
+      <h2 id="t-hist">📊 السجل والإحصائيات</h2>
+      <div class="card">
+        <div class="stats">
+          <div class="tile"><span class="tl">الاختبارات</span><b id="sCount">0</b></div>
+          <div class="tile"><span class="tl">متوسط التحميل</span><b id="sAvg">—</b></div>
+          <div class="tile"><span class="tl">أفضل تحميل</span><b id="sBest">—</b></div>
+          <div class="tile"><span class="tl">أقل تحميل</span><b id="sWorst">—</b></div>
+        </div>
+        <canvas id="chart" height="160" aria-label="رسم بياني لآخر النتائج" role="img"></canvas>
+        <div class="legend"><span class="lg d">تحميل</span><span class="lg u">رفع</span></div>
+      </div>
+      <div class="card">
+        <div id="histList"></div>
+        <div class="btn-row">
+          <button id="expCsv" class="btn btn-outline">تصدير CSV</button>
+          <button id="clearBtn" class="btn btn-danger">مسح السجل</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= الإعدادات ================= -->
+    <section id="view-settings" class="view" hidden aria-labelledby="t-set">
+      <h2 id="t-set">⚙️ الإعدادات</h2>
+      <div class="card">
+        <label class="opt"><span>حفظ سجل النتائج على الجهاز</span><input type="checkbox" id="oSave" role="switch"></label>
+        <label class="opt"><span>توفير البيانات <small>(اختبار أقصر وأخف)</small></span><input type="checkbox" id="oData" role="switch"></label>
+        <label class="opt"><span>اختبار تلقائي أثناء فتح التطبيق</span><input type="checkbox" id="oAuto" role="switch"></label>
+        <label class="opt sub"><span>كل</span>
+          <select id="oInt"><option value="15">15 دقيقة</option><option value="30">30 دقيقة</option><option value="60">ساعة</option><option value="180">3 ساعات</option></select>
+        </label>
+        <label class="opt sub"><span>تخطّي الاختبار التلقائي على بيانات الجوال</span><input type="checkbox" id="oWifi" role="switch"></label>
+        <p id="nextRun" class="muted small"></p>
+      </div>
+      <div class="card">
+        <label class="opt"><span>وضع توفير الطاقة <small>(بلا حركات أو تمويه، ويوقف الاختبار التلقائي)</small></span><input type="checkbox" id="oSaver" role="switch"></label>
+        <label class="opt"><span>تفعيله تلقائياً عند بطارية ≤ 20%</span><input type="checkbox" id="oAutoSaver" role="switch"></label>
+        <label class="opt"><span>وضع الأسود الكامل <small>(يوفر طاقة شاشات OLED)</small></span><input type="checkbox" id="oMono" role="switch"></label>
+      </div>
+      <div class="card">
+        <h3>حدود ما يستطيعه التطبيق</h3>
+        <p class="small muted">هذا تطبيق ويب: يقيس الشبكة فعلياً ويعرض حالة البطارية ويقارن خوادم DNS، لكنه لا يستطيع تغيير DNS الجهاز أو «تسريع» الإنترنت أو تنظيف الذاكرة — المتصفح لا يسمح بذلك لأي موقع. أي تطبيق يدّعي ذلك من المتصفح فهو محاكاة.</p>
+        <p class="small muted">كل بياناتك تبقى على جهازك. <a class="link" href="privacy.html">سياسة الخصوصية</a> · الإصدار <span id="ver"></span></p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="التنقل الرئيسي">
+    <a href="#test" data-view="test"><span aria-hidden="true">⚡</span>اختبار</a>
+    <a href="#dns" data-view="dns"><span aria-hidden="true">🌐</span>DNS</a>
+    <a href="#net" data-view="net"><span aria-hidden="true">📡</span>الاتصال</a>
+    <a href="#history" data-view="history"><span aria-hidden="true">📊</span>السجل</a>
+    <a href="#settings" data-view="settings"><span aria-hidden="true">⚙️</span>إعدادات</a>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
