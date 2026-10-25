@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "SpeedFusion Pro",
+  "short_name": "SpeedFusion",
+  "description": "اختبار حقيقي لسرعة الإنترنت ومقارنة خوادم DNS وفحص الاتصال والبطارية",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f0c29",
+  "theme_color": "#0f0c29",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "icons/icon-48x48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "icons/icon-72x72.png", "sizes": "72x72", "type": "image/png" },
+    { "src": "icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "اختبار السرعة", "url": "./#test" },
+    { "name": "مقارنة DNS", "url": "./#dns" }
+  ]
+}
