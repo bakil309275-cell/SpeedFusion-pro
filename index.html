@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https:; manifest-src 'self'; base-uri 'self'; form-action 'none'">
   <meta name="description" content="SpeedFusion Pro: اختبار حقيقي لسرعة الإنترنت (تحميل، رفع، زمن استجابة) ومقارنة سرعة خوادم DNS وفحص الاتصال وحالة البطارية.">
   <meta name="theme-color" content="#0f0c29">
-  <title>SpeedFusion Pro - اختبار سرعة الإنترنت وDNS</title>
+  <title>SpeedFusion Pro - السرعة وDNS وVPN</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon-96x96.png" type="image/png">
   <link rel="apple-touch-icon" href="icons/icon-192x192.png">
@@ -100,6 +100,44 @@
       </div>
     </section>
 
+    <!-- ================= VPN ================= -->
+    <section id="view-vpn" class="view" hidden aria-labelledby="t-vpn">
+      <h2 id="t-vpn">🛡️ VPN والمواقع المحجوبة</h2>
+      <div class="card">
+        <h3>حالة اتصالك الآن</h3>
+        <ul id="vpnStatus" class="kv"><li><span class="k">اضغط «افحص» لمعرفة هل VPN يعمل</span></li></ul>
+        <div class="btn-row">
+          <button id="vpnCheck" class="btn">افحص</button>
+          <button id="vpnBase" class="btn btn-outline">اعتمد هذا كوضعي بدون VPN</button>
+        </div>
+        <p class="muted small">للمقارنة الصحيحة: اضغط «اعتمد» وVPN مطفأ، ثم شغّل VPN وافحص من جديد.</p>
+      </div>
+      <div class="card">
+        <h3>اختبار فتح المواقع من شبكتك</h3>
+        <div class="copy-row"><input id="siteIn" class="inp" dir="ltr" placeholder="example.com" autocomplete="off" inputmode="url"><button id="siteAdd" class="chip">إضافة</button></div>
+        <ul id="siteList" class="kv"></ul>
+        <button id="siteTest" class="btn btn-outline">اختبر المواقع</button>
+        <p class="muted small">يعني «لا يفتح» أن الاتصال المباشر فشل (حجب أو عطل). النتيجة تتغير عند تشغيل VPN، وهذا أدق دليل على نجاحه.</p>
+      </div>
+      <div class="card">
+        <h3>شغّل VPN حقيقي</h3>
+        <p class="small">التطبيق نفسه لا يستطيع فتح نفق VPN (المتصفح يمنع ذلك). هذه الخيارات الحقيقية:</p>
+        <ul class="kv vpn-opts">
+          <li><span><b>Cloudflare WARP (1.1.1.1)</b><small class="muted"> مجاني، أسهل خيار، يشفّر ويغيّر مسارك</small></span><a class="chip" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone">تثبيت</a></li>
+          <li><span><b>Outline</b><small class="muted"> مفتوح المصدر؛ تنشئ خادمك الخاص بنفسك وتتحكم بالدولة</small></span><a class="chip" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=org.outline.android.client">تثبيت</a></li>
+          <li><span><b>WireGuard</b><small class="muted"> سريع؛ يستورد ملف إعداد من خادمك أو مزوّدك</small></span><a class="chip" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=com.wireguard.android">تثبيت</a></li>
+        </ul>
+        <h3 class="mt">لديك مفتاح Outline؟</h3>
+        <div class="copy-row"><input id="keyIn" class="inp" dir="ltr" placeholder="ss://…" autocomplete="off" spellcheck="false"><button id="keyGo" class="chip">فتح في Outline</button></div>
+        <p class="muted small">لا يُحفظ المفتاح في التطبيق ولا يُرسل لأي مكان؛ يُمرَّر فقط إلى تطبيق Outline المثبّت على جهازك.</p>
+      </div>
+      <div class="card">
+        <h3>اختيار الدولة</h3>
+        <p class="small">أقرب دول للقياس من اليمن غالباً: عُمان والإمارات والسعودية، لكنها تحجب بعض المواقع أيضاً. <b>خادم داخل اليمن لن يفك الحجب</b> لأن الحجب يتم داخل اليمن نفسه. للجمع بين الاستجابة الجيدة وعدم الحجب اختر غالباً هولندا أو ألمانيا أو فرنسا؛ وبعد التشغيل قِس استجابتك من تبويب «اختبار» لتقارن الدول بنفسك.</p>
+        <p class="small muted">تحذير أمان: تجنّب تطبيقات «VPN المجاني» المجهولة؛ كثير منها يبيع بياناتك. خادمك الخاص أو WARP أضمن. الـVPN يخفي موقعك عن المواقع ويشفّر المسار لكنه لا يجعلك مجهولاً تماماً، والتزم بقوانين بلدك.</p>
+      </div>
+    </section>
+
     <!-- ================= السجل ================= -->
     <section id="view-history" class="view" hidden aria-labelledby="t-hist">
       <h2 id="t-hist">📊 السجل والإحصائيات</h2>
@@ -152,6 +190,7 @@
     <a href="#test" data-view="test"><span aria-hidden="true">⚡</span>اختبار</a>
     <a href="#dns" data-view="dns"><span aria-hidden="true">🌐</span>DNS</a>
     <a href="#net" data-view="net"><span aria-hidden="true">📡</span>الاتصال</a>
+    <a href="#vpn" data-view="vpn"><span aria-hidden="true">🛡️</span>VPN</a>
     <a href="#history" data-view="history"><span aria-hidden="true">📊</span>السجل</a>
     <a href="#settings" data-view="settings"><span aria-hidden="true">⚙️</span>إعدادات</a>
   </nav>

@@ -1,5 +1,5 @@
 // Service Worker: يخزّن ملفات التطبيق فقط. لا يلمس أي طلب خارجي (اختبارات السرعة وDNS تمرّ مباشرة).
-const CACHE = 'speedfusion-v3.0.0';
+const CACHE = 'speedfusion-v3.1.0';
 const ASSETS = ['./', 'index.html', 'app.css', 'app.js', 'manifest.json', 'privacy.html',
   'icons/icon-96x96.png', 'icons/icon-192x192.png', 'icons/icon-512x512.png'];
 

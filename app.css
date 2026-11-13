@@ -120,3 +120,10 @@ body.mono .g-arc{stroke:#fff}
 body.mono .top h1{background:none;-webkit-text-fill-color:#fff;color:#fff}
 body.mono input[role=switch]:checked{background:#fff}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.inp{flex:1;min-width:0;background:rgba(0,0,0,.35);border:1px solid var(--line);color:var(--fg);border-radius:.6rem;padding:.55rem .7rem;font-size:.9rem}
+.mt{margin-top:1rem}
+.vpn-opts li{align-items:center}
+.vpn-opts small{display:block}
+.tabs a{font-size:.68rem}
+.kv .rm{background:none;border:0;color:var(--muted);cursor:pointer;margin-inline-start:.5rem}

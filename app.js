@@ -1,6 +1,6 @@
 'use strict';
 /* SpeedFusion Pro — كل القياسات هنا حقيقية (لا أرقام عشوائية). */
-const VERSION = '3.0.0';
+const VERSION = '3.1.0';
 const CF = 'https://speed.cloudflare.com';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -51,7 +51,7 @@ function applyModes() {
 }
 
 /* ---------- التنقل ---------- */
-const VIEWS = ['test', 'dns', 'net', 'history', 'settings'];
+const VIEWS = ['test', 'dns', 'net', 'vpn', 'history', 'settings'];
 function route() {
   let v = location.hash.slice(1);
   if (!VIEWS.includes(v)) v = 'test';
@@ -62,6 +62,7 @@ function route() {
     on ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
   });
   if (v === 'net') { renderNet(); readBattery(); }
+  if (v === 'vpn') renderSites();
   if (v === 'history') renderHistory();
   if (v === 'settings') renderSettings();
   window.scrollTo(0, 0);
@@ -375,6 +376,62 @@ $('#checkBtn').onclick = async () => {
   rows.push(li('عمل دون اتصال (Service Worker)', 'serviceWorker' in navigator && navigator.serviceWorker.controller ? 'مفعّل' : 'غير مفعّل بعد', 'serviceWorker' in navigator && navigator.serviceWorker.controller ? 'ok' : ''));
   rows.push(li('إجمالي ما استهلكته الاختبارات', `${nf(usedBytes / 1e6, 0)} MB`));
   ul.innerHTML = rows.join('');
+};
+
+/* ---------- VPN: كشف الحالة واختبار الحجب (لا نفق وهمي) ---------- */
+let sites = store.get('sf.sites', ['wikipedia.org', 'telegram.org', 'signal.org', 'torproject.org', 'github.com']);
+let siteState = {};
+const cleanHost = v => { v = v.trim().toLowerCase().replace(/^https?:\/\//, '').split(/[/?#]/)[0]; return /^[a-z0-9.-]+\.[a-z]{2,}$/.test(v) ? v : ''; };
+function renderSites() {
+  $('#siteList').innerHTML = sites.map(d => {
+    const st = siteState[d];
+    const txt = st == null ? '—' : st.ok ? `يفتح · ${nf(st.ms, 0)}ms` : 'لا يفتح';
+    return `<li><span class="k" dir="ltr">${esc(d)}</span><span class="v ${st == null ? '' : st.ok ? 'ok' : 'bad'}">${txt}<button class="rm" data-d="${esc(d)}" aria-label="حذف ${esc(d)}">✕</button></span></li>`;
+  }).join('') || '<li><span class="k">أضف موقعاً للاختبار</span></li>';
+  $$('#siteList .rm').forEach(b => b.onclick = () => { sites = sites.filter(x => x !== b.dataset.d); store.set('sf.sites', sites); renderSites(); });
+}
+$('#siteAdd').onclick = () => {
+  const d = cleanHost($('#siteIn').value);
+  if (!d) return toast('اكتب نطاقاً صحيحاً مثل example.com');
+  if (!sites.includes(d)) sites.push(d);
+  store.set('sf.sites', sites); $('#siteIn').value = ''; renderSites();
+};
+async function probe(d) {
+  const ctrl = new AbortController(), t = setTimeout(() => ctrl.abort(), 7000), s = performance.now();
+  try { await fetch(`https://${d}/?r=${rnd()}`, { mode: 'no-cors', cache: 'no-store', credentials: 'omit', signal: ctrl.signal }); return { ok: true, ms: performance.now() - s }; }
+  catch { return { ok: false }; } finally { clearTimeout(t); }
+}
+$('#siteTest').onclick = async function () {
+  if (!navigator.onLine) return toast('لا يوجد اتصال بالإنترنت');
+  this.disabled = true; siteState = {}; renderSites();
+  await Promise.all(sites.map(async d => { siteState[d] = await probe(d); renderSites(); }));
+  this.disabled = false;
+};
+$('#vpnCheck').onclick = async () => {
+  const ul = $('#vpnStatus'); ul.innerHTML = '<li><span class="k">جارٍ الفحص…</span></li>';
+  const tr = await fetchTrace();
+  if (!tr) { ul.innerHTML = '<li><span class="k">الفحص</span><span class="v bad">تعذّر الوصول (لا إنترنت أو محجوب)</span></li>'; return; }
+  const base = store.get('sf.vpnBase', null);
+  const warpOn = tr.warp && tr.warp !== 'off';
+  let verdict, cls;
+  if (warpOn) { verdict = 'VPN يعمل (Cloudflare WARP)'; cls = 'ok'; }
+  else if (base && (base.ip !== tr.ip || base.loc !== tr.loc)) { verdict = `يبدو أن VPN يعمل: تغيّر مخرجك من ${base.loc} إلى ${tr.loc}`; cls = 'ok'; }
+  else if (base) { verdict = 'لا فرق عن وضعك المعتمد بدون VPN'; cls = 'warn'; }
+  else { verdict = 'لا يمكن الجزم — اعتمد وضعك بدون VPN أولاً للمقارنة'; cls = 'warn'; }
+  const li = (k, v, c = '') => `<li><span class="k">${esc(k)}</span><span class="v ${c}">${esc(v)}</span></li>`;
+  ul.innerHTML = li('الخلاصة', verdict, cls) + li('عنوان IP الظاهر للمواقع', tr.ip) + li('الدولة الظاهرة', tr.loc || '?') + li('مركز بيانات Cloudflare', tr.colo || '?') + (base ? li('وضعك المعتمد بدون VPN', `${base.loc} · ${base.ip}`) : '');
+  ul._last = { ip: tr.ip, loc: tr.loc };
+};
+$('#vpnBase').onclick = async () => {
+  const tr = await fetchTrace();
+  if (!tr) return toast('تعذّر الفحص');
+  store.set('sf.vpnBase', { ip: tr.ip, loc: tr.loc }); toast(`اعتُمد: ${tr.loc} · ${tr.ip}`);
+};
+$('#keyGo').onclick = () => {
+  const k = $('#keyIn').value.trim();
+  if (!/^(ss|ssconf):\/\/[^\s]+$/i.test(k)) return toast('المفتاح يجب أن يبدأ بـ ss:// أو ssconf://');
+  const a = document.createElement('a'); a.href = k; document.body.append(a); a.click(); a.remove();
+  $('#keyIn').value = '';
 };
 
 /* ---------- DNS عبر DoH (RFC 8484) ---------- */
