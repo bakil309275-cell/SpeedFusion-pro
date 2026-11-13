@@ -1,6 +1,6 @@
 'use strict';
 /* SpeedFusion Pro — كل القياسات هنا حقيقية (لا أرقام عشوائية). */
-const VERSION = '3.1.0';
+const VERSION = '3.1.1';
 const CF = 'https://speed.cloudflare.com';
 
 const $ = (s, r = document) => r.querySelector(s);
