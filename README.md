@@ -4,7 +4,7 @@
 
 تطبيق ويب تقدّمي (PWA) **يقيس فعلياً** سرعة الإنترنت، ويقارن خوادم DNS، ويفحص الاتصال وحالة البطارية. بلا أرقام وهمية ولا إعلانات.
 
-**الرابط:** https://bakil309275-cell.github.io/speedfusion-pwa/
+**الرابط:** https://bakil309275-cell.github.io/SpeedFusion-pro/
 
 ## ما الذي يفعله فعلاً
 | الميزة | كيف تعمل |
@@ -27,8 +27,8 @@
 
 ## التشغيل محلياً
 ```bash
-git clone https://github.com/bakil309275-cell/speedfusion-pwa.git
-cd speedfusion-pwa/docs && python3 -m http.server 8000   # ثم افتح http://localhost:8000
+git clone https://github.com/bakil309275-cell/SpeedFusion-pro.git
+cd SpeedFusion-pro/docs && python3 -m http.server 8000   # ثم افتح http://localhost:8000
 ```
 
 ## الهيكل

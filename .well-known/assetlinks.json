@@ -2,7 +2,7 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "io.github.bakil309275_cell.twa",
-        "sha256_cert_fingerprints": ["A4:88:09:0E:FB:EC:CB:28:CE:90:2C:A5:C9:07:F8:E7:AD:EB:76:92:52:6D:9C:92:6D:CD:44:51:37:9E:4B:AC"]
+        "package_name": "com.bakil.speedfusion",
+        "sha256_cert_fingerprints": ["75:56:3F:DC:38:88:46:42:A7:5F:ED:24:1A:62:3D:AF:13:B9:7C:B2:A9:08:D5:7B:AB:26:06:7B:95:48:2A:37"]
       }
     }]
